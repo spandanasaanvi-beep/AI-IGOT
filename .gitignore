@@ -1,0 +1,14 @@
+*.js
+*.jsx
+*.ts
+*.tsx
+dist
+dist-ssr
+*.local
+node_modules
+.env
+.env.local
+.DS_Store
+.vscode
+.idea
+venv/

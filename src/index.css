@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply box-border;
+}
+
+html {
+  @apply antialiased;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 font-sans;
+}
+
+/* ---------- Tricolor top strap (govt portal signature) ---------- */
+.gov-strap {
+  height: 4px;
+  background: linear-gradient(90deg, #ff9933 0 33.3%, #ffffff 33.3% 66.6%, #138808 66.6% 100%);
+}
+
+/* ---------- Reusable primitives ---------- */
+.card {
+  @apply bg-white rounded-lg shadow-card border border-slate-200;
+}
+
+.card-hover {
+  @apply transition-shadow duration-200 hover:shadow-card-hover;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 font-semibold rounded-md px-5 py-2.5 text-sm transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply btn bg-primary-800 text-white hover:bg-primary-700 focus-visible:ring-primary-800;
+}
+
+.btn-secondary {
+  @apply btn bg-white text-primary-800 border border-primary-300 hover:bg-primary-50 focus-visible:ring-primary-800;
+}
+
+.btn-success {
+  @apply btn bg-emerald-700 text-white hover:bg-emerald-600 focus-visible:ring-emerald-700;
+}
+
+.btn-danger {
+  @apply btn bg-red-600 text-white hover:bg-red-500 focus-visible:ring-red-600;
+}
+
+.input {
+  @apply w-full px-3.5 py-2.5 border border-slate-300 rounded-md text-sm bg-white focus:outline-none focus:border-primary-600 focus:ring-2 focus:ring-primary-100 transition-colors;
+}
+
+.label {
+  @apply block text-sm font-semibold text-slate-700 mb-1.5;
+}
+
+.badge {
+  @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+/* ---------- Progress bars ---------- */
+.progress-bar {
+  @apply h-2.5 w-full bg-slate-200 rounded-full overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full rounded-full transition-all duration-500;
+}
+
+/* ---------- Animations (subtle only) ---------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-14px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-slideIn {
+  animation: slideIn 0.25s ease-out;
+}
+
+/* pulse-dot for monitoring indicators */
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-pulse-dot {
+  animation: pulseDot 1.6s ease-in-out infinite;
+}
+
+/* Scrollbar polish for sidebar */
+.sidebar-scroll::-webkit-scrollbar { width: 6px; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+/* Certificate print styling */
+.certificate-border {
+  border: 12px double #173496;
+}
+
+@media print {
+  body * { visibility: hidden; }
+  #certificate-print, #certificate-print * { visibility: visible; }
+  #certificate-print { position: absolute; left: 0; top: 0; width: 100%; }
+}
