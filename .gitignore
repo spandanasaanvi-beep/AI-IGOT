@@ -1,7 +1,3 @@
-*.js
-*.jsx
-*.ts
-*.tsx
 dist
 dist-ssr
 *.local
