@@ -5,6 +5,15 @@ import { ChakraMark } from '../components/Sidebar';
 
 const APPROACH_STEPS = ['Assess', 'Identify', 'Learn', 'Test', 'Improve', 'Reassess', 'Certify'];
 
+const TEAM_MEMBERS = [
+  { name: 'Spandana M', role: 'Backend Developer' },
+  { name: 'Anusha N', role: 'Team Lead' },
+  { name: 'Chandana R', role: 'PPT Designer' },
+  { name: 'Harshitha US', role: 'Frontend Executive' },
+  { name: 'Stephen Solomon', role: 'Testing' },
+  { name: 'Nanda Kishor K', role: 'Debugging' },
+];
+
 const AboutUs: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -59,13 +68,13 @@ const AboutUs: React.FC = () => {
       <div className="card p-6">
         <SectionTitle sub="Built by a team of six contributors">THE TEAM</SectionTitle>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((n) => (
-            <div key={n} className="border border-slate-200 rounded-md p-5 text-center bg-slate-50/60">
+          {TEAM_MEMBERS.map(({ name, role }) => (
+            <div key={name} className="border border-slate-200 rounded-md p-5 text-center bg-slate-50/60">
               <span className="inline-flex w-12 h-12 rounded-full bg-primary-100 text-primary-800 items-center justify-center">
                 <Users size={20} />
               </span>
-              <p className="text-sm font-bold text-slate-700 mt-3">Team Member {n}</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Contributor</p>
+              <p className="text-sm font-bold text-slate-700 mt-3">{name}</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">{role}</p>
             </div>
           ))}
         </div>
