@@ -1,56 +1,97 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Camera, ShieldAlert, ShieldCheck, VideoOff } from 'lucide-react';
+import { Camera, RefreshCcw, ShieldAlert, ShieldCheck, VideoOff } from 'lucide-react';
+
+type CameraStatus = 'idle' | 'requesting' | 'active' | 'denied' | 'unavailable';
 
 interface Props {
-  /** Called when the demo detector fires an event (e.g. simulated look-away). */
   onDemoEvent?: (msg: string) => void;
+  required?: boolean;
+  onStatusChange?: (status: CameraStatus) => void;
 }
 
-/**
- * AI Camera Monitoring — PROTOTYPE.
- *
- * Real browser camera access (getUserMedia) with a visible preview.
- * Advanced computer-vision face/eye detection is NOT implemented: the
- * periodic "look-away" events below are clearly-labelled demo logic.
- * No recording is stored; the stream stays local and is stopped on unmount.
- */
-const CameraMonitor: React.FC<Props> = ({ onDemoEvent }) => {
+const CameraMonitor: React.FC<Props> = ({ onDemoEvent, required = false, onStatusChange }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const [status, setStatus] = useState<'idle' | 'requesting' | 'active' | 'denied' | 'unavailable'>('idle');
+  const [status, setStatus] = useState<CameraStatus>('idle');
+
+  const stopStream = () => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const updateStatus = (nextStatus: CameraStatus) => {
+    setStatus(nextStatus);
+    onStatusChange?.(nextStatus);
+  };
 
   const requestCamera = async () => {
-    setStatus('requesting');
+    if (!navigator.mediaDevices?.getUserMedia) {
+      updateStatus('unavailable');
+      return;
+    }
+
+    updateStatus('requesting');
+
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: false,
+      });
+
       streamRef.current = stream;
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        videoRef.current.muted = true;
+        videoRef.current.playsInline = true;
         await videoRef.current.play().catch(() => undefined);
       }
-      setStatus('active');
+
+      stream.getVideoTracks().forEach((track) => {
+        track.onended = () => {
+          updateStatus('unavailable');
+          onDemoEvent?.('Camera access was interrupted. Please allow camera permission to continue the assessment.');
+        };
+      });
+
+      updateStatus('active');
     } catch (err: unknown) {
       const name = (err as { name?: string })?.name;
-      setStatus(name === 'NotAllowedError' ? 'denied' : 'unavailable');
+      const nextStatus = name === 'NotAllowedError' ? 'denied' : 'unavailable';
+      updateStatus(nextStatus);
+      if (required) {
+        onDemoEvent?.('Camera access is required for this assessment. Please allow camera permission and retry.');
+      }
     }
   };
 
   useEffect(() => {
-    return () => {
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-    };
-  }, []);
+    if (required) {
+      void requestCamera();
+    }
 
-  // Demo-only periodic detection events (clearly labelled, not real CV)
+    return () => {
+      stopStream();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [required]);
+
   useEffect(() => {
     if (status !== 'active' || !onDemoEvent) return;
+
     const interval = setInterval(() => {
-      if (Math.random() < 0.15) {
+      if (Math.random() < 0.08) {
         onDemoEvent('DEMO EVENT: Possible look-away from screen (simulated AI detection).');
       }
     }, 25000);
+
     return () => clearInterval(interval);
   }, [status, onDemoEvent]);
+
+  const title = required ? 'Mandatory Camera Check' : 'AI Camera Monitoring';
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-start bg-slate-50 border border-slate-200 rounded-md p-4">
@@ -60,14 +101,22 @@ const CameraMonitor: React.FC<Props> = ({ onDemoEvent }) => {
           <VideoOff size={28} className="text-slate-400 absolute" />
         )}
         {status === 'active' && (
-          <span className="absolute top-1.5 left-1.5 badge bg-red-600 text-white animate-pulse-dot">● REC (local preview only)</span>
+          <span className="absolute top-1.5 left-1.5 badge bg-red-600 text-white animate-pulse-dot">● REC</span>
         )}
       </div>
+
       <div className="flex-1">
         <p className="text-sm font-semibold text-slate-800 flex items-center gap-2">
-          <Camera size={15} /> AI Camera Monitoring
+          <Camera size={15} /> {title}
         </p>
-        {status === 'idle' && (
+
+        {required && (
+          <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
+            Camera access is mandatory for this assessment. Please allow access so the live preview can start.
+          </p>
+        )}
+
+        {status === 'idle' && !required && (
           <>
             <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">
               Camera permission is requested before the assessment. Video stays on your device — nothing is recorded or uploaded.
@@ -77,24 +126,42 @@ const CameraMonitor: React.FC<Props> = ({ onDemoEvent }) => {
             </button>
           </>
         )}
-        {status === 'requesting' && <p className="text-xs text-slate-500 mt-1.5">Requesting camera permission…</p>}
+
+        {status === 'requesting' && (
+          <p className="text-xs text-slate-500 mt-1.5">Requesting camera permission…</p>
+        )}
+
         {status === 'active' && (
           <div className="mt-1.5 space-y-1">
             <p className="text-xs font-semibold text-emerald-700 flex items-center gap-1.5">
-              <ShieldCheck size={14} /> AI Monitoring: Active
+              <ShieldCheck size={14} /> Camera access granted
             </p>
             <p className="text-[11px] text-slate-500">
-              Prototype: attention events are simulated demo logic — no real computer vision runs, and no footage is stored.
+              Live preview is active and remains on your device during the assessment.
             </p>
           </div>
         )}
+
         {status === 'denied' && (
-          <p className="text-xs text-amber-700 mt-1.5 flex items-center gap-1.5">
-            <ShieldAlert size={14} /> Camera permission denied — you may continue, but monitoring is inactive.
-          </p>
+          <div className="mt-2 space-y-2">
+            <p className="text-xs text-amber-700 flex items-center gap-1.5">
+              <ShieldAlert size={14} /> Camera permission was denied. Camera access is mandatory for this assessment.
+            </p>
+            <button className="btn-primary !py-2 !px-4 text-xs" onClick={requestCamera}>
+              <RefreshCcw size={13} className="inline-block mr-1" /> Retry camera access
+            </button>
+          </div>
         )}
+
         {status === 'unavailable' && (
-          <p className="text-xs text-amber-700 mt-1.5">Camera unavailable on this device — monitoring is inactive.</p>
+          <div className="mt-2 space-y-2">
+            <p className="text-xs text-amber-700">
+              Camera is unavailable on this device or the stream stopped unexpectedly. Please retry after checking your browser settings.
+            </p>
+            <button className="btn-primary !py-2 !px-4 text-xs" onClick={requestCamera}>
+              <RefreshCcw size={13} className="inline-block mr-1" /> Retry camera access
+            </button>
+          </div>
         )}
       </div>
     </div>

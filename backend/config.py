@@ -28,6 +28,7 @@ class Settings(BaseSettings):
 
     # OTP Configuration
     otp_provider: str = "development"  # twilio, msg91, firebase, development
+    otp_dev_fallback_enabled: bool = False
     otp_expiry_minutes: int = 5
     otp_max_attempts: int = 3
     otp_length: int = 6
@@ -83,7 +84,7 @@ class Settings(BaseSettings):
     smtp_from_name: str = "AI-IGOT Platform"
 
     # Application Settings
-    demo_mode: bool = True
+    demo_mode: bool = False
     log_level: str = "INFO"
     environment: str = "development"  # development, staging, production
 

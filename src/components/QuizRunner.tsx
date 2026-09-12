@@ -12,10 +12,11 @@ interface Props {
   securitySlot?: React.ReactNode;
   /** If true, disables answer navigation controls (used for intro screens) */
   timeLimitMinutes?: number;
+  cameraAvailable?: boolean;
 }
 
 const QuizRunner: React.FC<Props> = ({
-  questions, title, subtitle, onAlert, onSubmit, securitySlot, timeLimitMinutes,
+  questions, title, subtitle, onAlert, onSubmit, securitySlot, timeLimitMinutes, cameraAvailable = true,
 }) => {
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(() => questions.map(() => null));
@@ -116,53 +117,64 @@ const QuizRunner: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Question card */}
-      <div className="card p-6 animate-fadeIn" key={questions[idx].id}>
-        <div className="flex items-center gap-2 mb-3">
-          <span className="badge bg-primary-50 text-primary-800 border border-primary-100">{questions[idx].competency}</span>
-          <span className="badge bg-slate-100 text-slate-600 capitalize">{questions[idx].difficulty}</span>
-        </div>
-        <p className="text-base font-semibold text-slate-900 leading-relaxed">{idx + 1}. {questions[idx].question}</p>
-        <div className="mt-5 space-y-2.5">
-          {questions[idx].options.map((opt, oi) => {
-            const selected = answers[idx] === oi;
-            return (
-              <button
-                key={oi}
-                onClick={() => setAnswers((a) => a.map((v, i) => (i === idx ? oi : v)))}
-                className={`w-full text-left px-4 py-3 rounded-md border text-sm transition-colors ${
-                  selected
-                    ? 'border-primary-700 bg-primary-50 text-primary-900 font-semibold'
-                    : 'border-slate-200 hover:border-primary-300 hover:bg-primary-50/40 text-slate-700'
-                }`}
-              >
-                <span className={`inline-flex w-6 h-6 items-center justify-center rounded-full mr-3 text-xs font-bold ${
-                  selected ? 'bg-primary-800 text-white' : 'bg-slate-100 text-slate-500'
-                }`}>
-                  {String.fromCharCode(65 + oi)}
-                </span>
-                {opt}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {cameraAvailable ? (
+        <>
+          {/* Question card */}
+          <div className="card p-6 animate-fadeIn" key={questions[idx].id}>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="badge bg-primary-50 text-primary-800 border border-primary-100">{questions[idx].competency}</span>
+              <span className="badge bg-slate-100 text-slate-600 capitalize">{questions[idx].difficulty}</span>
+            </div>
+            <p className="text-base font-semibold text-slate-900 leading-relaxed">{idx + 1}. {questions[idx].question}</p>
+            <div className="mt-5 space-y-2.5">
+              {questions[idx].options.map((opt, oi) => {
+                const selected = answers[idx] === oi;
+                return (
+                  <button
+                    key={oi}
+                    onClick={() => setAnswers((a) => a.map((v, i) => (i === idx ? oi : v)))}
+                    className={`w-full text-left px-4 py-3 rounded-md border text-sm transition-colors ${
+                      selected
+                        ? 'border-primary-700 bg-primary-50 text-primary-900 font-semibold'
+                        : 'border-slate-200 hover:border-primary-300 hover:bg-primary-50/40 text-slate-700'
+                    }`}
+                  >
+                    <span className={`inline-flex w-6 h-6 items-center justify-center rounded-full mr-3 text-xs font-bold ${
+                      selected ? 'bg-primary-800 text-white' : 'bg-slate-100 text-slate-500'
+                    }`}>
+                      {String.fromCharCode(65 + oi)}
+                    </span>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
-      {/* Controls */}
-      <div className="flex items-center justify-between">
-        <button className="btn-secondary" onClick={() => setIdx((i) => Math.max(0, i - 1))} disabled={idx === 0}>
-          <ChevronLeft size={16} /> Previous
-        </button>
-        {idx < questions.length - 1 ? (
-          <button className="btn-primary" onClick={() => setIdx((i) => Math.min(questions.length - 1, i + 1))}>
-            Next <ChevronRight size={16} />
-          </button>
-        ) : (
-          <button className="btn-success" onClick={() => setShowSubmitConfirm(true)}>
-            Submit Assessment
-          </button>
-        )}
-      </div>
+          {/* Controls */}
+          <div className="flex items-center justify-between">
+            <button className="btn-secondary" onClick={() => setIdx((i) => Math.max(0, i - 1))} disabled={idx === 0}>
+              <ChevronLeft size={16} /> Previous
+            </button>
+            {idx < questions.length - 1 ? (
+              <button className="btn-primary" onClick={() => setIdx((i) => Math.min(questions.length - 1, i + 1))}>
+                Next <ChevronRight size={16} />
+              </button>
+            ) : (
+              <button className="btn-success" onClick={() => setShowSubmitConfirm(true)}>
+                Submit Assessment
+              </button>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="card border-amber-200 bg-amber-50 p-6">
+          <h3 className="text-lg font-bold text-amber-900">Assessment paused</h3>
+          <p className="text-sm text-amber-800 mt-2">
+            Camera access is required for this assessment. Please allow camera permission so the session can continue.
+          </p>
+        </div>
+      )}
 
       {/* Submit confirm modal */}
       {showSubmitConfirm && (

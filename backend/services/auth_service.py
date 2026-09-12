@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 from jose import JWTError, jwt
 from fastapi import HTTPException, status, Depends
-from fastapi.security import HTTPBearer, HTTPAuthenticationCredentials
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from ..config import settings
@@ -93,7 +93,7 @@ class AuthService:
     
     async def get_current_user(
         self,
-        credentials: HTTPAuthenticationCredentials = Depends(security),
+        credentials: HTTPAuthorizationCredentials = Depends(security),
         db: Session = Depends(get_db)
     ) -> Dict:
         """Get current authenticated user from JWT token."""

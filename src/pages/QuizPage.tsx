@@ -21,6 +21,7 @@ const QuizPage: React.FC = () => {
   const [phase, setPhase] = useState<'config' | 'loading' | 'test'>('config');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [, setDemoEvents] = useState<string[]>([]);
+  const [cameraActive, setCameraActive] = useState(false);
 
   const readyMaterials = state.materials.filter((m) => m.status === 'ready');
 
@@ -62,6 +63,10 @@ const QuizPage: React.FC = () => {
   };
 
   const handleDemoEvent = (_msg: string) => setDemoEvents((d) => [...d.slice(-4), _msg]);
+
+  const handleCameraStatusChange = (status: 'idle' | 'requesting' | 'active' | 'denied' | 'unavailable') => {
+    setCameraActive(status === 'active');
+  };
 
   const handleSubmit = (answers: (number | null)[], violations: number) => {
     const sourceLabel = config.source === 'gaps' ? 'Role & Competency Gaps' : 'Uploaded Material';
@@ -124,8 +129,17 @@ const QuizPage: React.FC = () => {
             ))}
           </div>
 
-          <button className="btn-primary w-full mt-7" onClick={startGeneration}>
-            <Wand2 size={16} /> Generate Quiz
+          <div className="mt-6 rounded-md border border-primary-200 bg-primary-50/40 p-4 text-left">
+            <p className="text-xs font-bold uppercase tracking-wide text-primary-800">Mandatory camera requirement</p>
+            <p className="text-sm text-slate-600 mt-1">
+              Camera access is required before this assessment can begin. Please allow access to continue.
+            </p>
+          </div>
+
+          <CameraMonitor required onStatusChange={handleCameraStatusChange} onDemoEvent={handleDemoEvent} />
+
+          <button className="btn-primary w-full mt-7 disabled:opacity-50 disabled:cursor-not-allowed" onClick={startGeneration} disabled={!cameraActive}>
+            {cameraActive ? <><Wand2 size={16} /> Generate Quiz</> : 'Camera access required to continue'}
           </button>
 
           <p className="text-[11px] text-slate-400 mt-3 text-center leading-relaxed">
@@ -157,8 +171,9 @@ const QuizPage: React.FC = () => {
       title="AI-Generated Quiz"
       subtitle={`Source: ${config.source === 'gaps' ? 'Role & Competency Gaps' : 'Uploaded Material'} · Difficulty: ${config.difficulty}`}
       onAlert={(msg) => { notify('info', msg); handleDemoEvent(msg); }}
-      securitySlot={<CameraMonitor onDemoEvent={handleDemoEvent} />}
+      securitySlot={<CameraMonitor required onStatusChange={handleCameraStatusChange} onDemoEvent={handleDemoEvent} />}
       onSubmit={handleSubmit}
+      cameraAvailable={cameraActive}
     />
   );
 };

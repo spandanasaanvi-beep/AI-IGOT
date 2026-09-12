@@ -19,6 +19,7 @@ const SkillAssessment: React.FC = () => {
   const { notify } = useToast();
   const [phase, setPhase] = useState<'intro' | 'test'>('intro');
   const [demoEvents, setDemoEvents] = useState<string[]>([]);
+  const [cameraActive, setCameraActive] = useState(false);
 
   const role = state.user?.role || 'Statistical Investigator';
 
@@ -39,6 +40,10 @@ const SkillAssessment: React.FC = () => {
   const isReassessment = Boolean(initialAssessment);
 
   const handleDemoEvent = (msg: string) => setDemoEvents((d) => [...d.slice(-4), msg]);
+
+  const handleCameraStatusChange = (status: 'idle' | 'requesting' | 'active' | 'denied' | 'unavailable') => {
+    setCameraActive(status === 'active');
+  };
 
   const handleSubmit = (answers: (number | null)[], violations: number) => {
     submitInitialAssessment(
@@ -79,8 +84,17 @@ const SkillAssessment: React.FC = () => {
               <p className="text-[11px] text-slate-500 mt-0.5">Camera + tab-switch integrity checks</p>
             </div>
           </div>
-          <button className="btn-primary mt-7" onClick={() => setPhase('test')}>
-            Start Assessment <ArrowRight size={16} />
+          <div className="mt-6 rounded-md border border-primary-200 bg-primary-50/40 p-4 text-left">
+            <p className="text-xs font-bold uppercase tracking-wide text-primary-800">Mandatory camera requirement</p>
+            <p className="text-sm text-slate-600 mt-1">
+              Please allow camera access before starting the assessment. The live preview remains on your device and is required for this session.
+            </p>
+          </div>
+
+          <CameraMonitor required onStatusChange={handleCameraStatusChange} onDemoEvent={handleDemoEvent} />
+
+          <button className="btn-primary mt-7 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPhase('test')} disabled={!cameraActive}>
+            {cameraActive ? <>Start Assessment <ArrowRight size={16} /></> : 'Camera access required to continue'}
           </button>
         </div>
 
@@ -88,7 +102,7 @@ const SkillAssessment: React.FC = () => {
           <h3 className="text-sm font-bold text-slate-800 mb-3">Assessment guidelines</h3>
           <ul className="space-y-2.5 text-sm text-slate-600">
             <li className="flex gap-2.5"><Camera size={16} className="text-primary-700 shrink-0 mt-0.5" />
-              Camera monitoring is optional but recommended; the preview stays on your device.</li>
+              Camera access is mandatory for this assessment and must remain available throughout the session.</li>
             <li className="flex gap-2.5"><Eye size={16} className="text-primary-700 shrink-0 mt-0.5" />
               Tab switching is detected via the browser Page Visibility API and recorded as integrity violations.</li>
             <li className="flex gap-2.5"><ShieldCheck size={16} className="text-primary-700 shrink-0 mt-0.5" />
@@ -110,8 +124,9 @@ const SkillAssessment: React.FC = () => {
       title={isReassessment ? 'Reassessment — Full Competency' : 'Initial Skill Assessment'}
       subtitle={`Role: ${role} · Answer all questions to complete the analysis`}
       onAlert={(msg) => { notify('info', msg); handleDemoEvent(msg); }}
-      securitySlot={<CameraMonitor onDemoEvent={handleDemoEvent} />}
+      securitySlot={<CameraMonitor required onStatusChange={handleCameraStatusChange} onDemoEvent={handleDemoEvent} />}
       onSubmit={handleSubmit}
+      cameraAvailable={cameraActive}
     />
   );
 };

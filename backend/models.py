@@ -268,7 +268,7 @@ class CompetencyScore(Base):
     current_score = Column(Float, default=0.0)  # Percentage
     previous_score = Column(Float, default=0.0)  # For tracking improvement
     required_score = Column(Float, default=75.0)  # From role_competencies
-    status = relationship("RoleCompetency")  # Derived: achieved, medium, high_priority
+    status = Column(String(50), default="not_started")  # Derived: achieved, medium, high_priority
     assessment_count = Column(Integer, default=0)
     last_assessment_date = Column(DateTime, nullable=True)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

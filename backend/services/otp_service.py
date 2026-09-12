@@ -33,15 +33,27 @@ class OTPService:
         - development (logs only)
         """
         try:
+            from ..config import settings
+
+            if provider == "development":
+                if settings.environment != "development" or not settings.otp_dev_fallback_enabled:
+                    logger.error(
+                        "Development OTP provider is disabled outside local development. "
+                        "Enable OTP_DEV_FALLBACK_ENABLED in development only."
+                    )
+                    return False
+                logger.warning(
+                    f"📱 [DEV ONLY] OTP fallback enabled for {phone_number}. "
+                    f"This is not a real SMS delivery pathway."
+                )
+                return True
+
             if provider == "twilio":
                 return await self._send_via_twilio(phone_number, otp_code)
             elif provider == "msg91":
                 return await self._send_via_msg91(phone_number, otp_code)
             elif provider == "firebase":
                 return await self._send_via_firebase(phone_number, otp_code)
-            elif provider == "development":
-                logger.info(f"📱 [DEV] OTP {otp_code} for {phone_number}")
-                return True
             else:
                 logger.error(f"Unknown OTP provider: {provider}")
                 return False

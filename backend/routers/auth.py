@@ -62,10 +62,19 @@ async def send_otp(
         
         # Generate OTP
         otp_code = otp_service.generate_otp(settings.otp_length)
-        
-        # Send OTP through configured provider
-        if settings.demo_mode:
-            logger.info(f"📱 DEMO MODE: OTP for {phone_number}: {otp_code}")
+
+        development_fallback = (
+            settings.environment == "development"
+            and settings.otp_dev_fallback_enabled
+        )
+
+        # Send OTP through configured provider.
+        # Development fallback remains explicitly disabled outside local development.
+        if development_fallback:
+            logger.warning(
+                f"📱 DEVELOPMENT OTP FALLBACK ENABLED for {phone_number}. "
+                f"This is for local testing only and is not a real SMS provider."
+            )
             otp_sent = True
         else:
             otp_sent = await otp_service.send_otp(
@@ -97,7 +106,7 @@ async def send_otp(
             "message": "OTP sent successfully",
             "phone_number": phone_number,
             "expiry_minutes": settings.otp_expiry_minutes,
-            "demo_otp": otp_code if settings.demo_mode else None,  # Only in demo mode
+            "development_fallback": development_fallback,
         }
     
     except HTTPException:
