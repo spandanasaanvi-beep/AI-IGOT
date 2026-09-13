@@ -18,8 +18,12 @@ const ProfileSetup: React.FC = () => {
     qualification: '',
     role: '',
     organization: '',
+    currentAssignment: '',
     experienceYears: 0,
     experienceMonths: 0,
+    previousTraining: '',
+    technicalSkills: '',
+    statisticalSkills: '',
   });
   const [error, setError] = useState('');
 
@@ -107,6 +111,10 @@ const ProfileSetup: React.FC = () => {
                     {ORGANIZATIONS.map((o) => <option key={o}>{o}</option>)}
                   </select>
                 </div>
+                <div>
+                  <label className="label">Current Assignment / Department</label>
+                  <input className="input" value={form.currentAssignment} onChange={(e) => set('currentAssignment', e.target.value)} placeholder="e.g. Survey Design Unit, State Statistical Bureau" />
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="label">Experience (Years)</label>
@@ -118,6 +126,18 @@ const ProfileSetup: React.FC = () => {
                     <input type="number" min={0} max={11} className="input" value={form.experienceMonths || ''}
                       onChange={(e) => set('experienceMonths', parseInt(e.target.value, 10) || 0)} />
                   </div>
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="label">Previous Training / Capacity Building</label>
+                  <textarea className="input min-h-24" value={form.previousTraining} onChange={(e) => set('previousTraining', e.target.value)} placeholder="e.g. Survey methodology workshop, Python for data analysis, NSSTA training" />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="label">Existing Technical Skills</label>
+                  <textarea className="input min-h-24" value={form.technicalSkills} onChange={(e) => set('technicalSkills', e.target.value)} placeholder="e.g. Excel, Python, SQL, GIS, data visualization" />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="label">Existing Statistical Skills</label>
+                  <textarea className="input min-h-24" value={form.statisticalSkills} onChange={(e) => set('statisticalSkills', e.target.value)} placeholder="e.g. sampling, price statistics, national accounts, metadata standards" />
                 </div>
               </div>
               <p className="text-xs text-slate-500 mt-3">

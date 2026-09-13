@@ -5,6 +5,7 @@ import { useAppContext } from '../context/AppContext';
 import { EmptyState, SectionTitle } from '../components/EmptyState';
 import { useToast } from '../components/Toast';
 import { ClipboardCheck } from 'lucide-react';
+import { TRAINING_PROGRAMMES } from '../mockData';
 
 const PRIORITY_STYLES: Record<string, string> = {
   high: 'bg-red-50 text-red-700 border border-red-200',
@@ -18,6 +19,7 @@ const LearningPath: React.FC = () => {
   const { notify } = useToast();
 
   const resources = state.resources;
+  const learningStages = ['Foundation', 'Skill Development', 'Applied Learning', 'Assessment', 'Advanced Learning'];
 
   if (!state.competencies.length) {
     return (
@@ -64,6 +66,7 @@ const LearningPath: React.FC = () => {
                         <h3 className="font-bold text-slate-900">{r.title}</h3>
                         <span className={`badge ${PRIORITY_STYLES[r.priority]}`}>{r.priority.toUpperCase()} PRIORITY</span>
                         {r.module && <span className="badge bg-slate-100 text-slate-600">{r.module}</span>}
+                        {learningStages[i] && <span className="badge bg-primary-50 text-primary-800 border border-primary-100">{learningStages[i]}</span>}
                       </div>
                       <p className="text-sm text-slate-600 mt-1.5">{r.description}</p>
                       <p className="text-xs text-slate-500 mt-1.5">
@@ -71,7 +74,11 @@ const LearningPath: React.FC = () => {
                         {comp && <> · current {comp.currentScore}% → required {comp.requiredScore}%</>}
                         {` · ${r.duration} · ${r.type}`}
                       </p>
-                      <p className="text-xs text-slate-400 mt-0.5">Reason: your current competency is below the required level.</p>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        {comp && comp.gap > 0
+                          ? `Recommended because your role requires ${comp.name} proficiency and your current score is ${comp.currentScore}% versus the ${comp.requiredScore}% target.`
+                          : 'Recommended because it strengthens the next level of capability in your role.'}
+                      </p>
                     </div>
                     <span className={`badge shrink-0 ${
                       r.status === 'completed' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
@@ -117,6 +124,32 @@ const LearningPath: React.FC = () => {
             })}
           </div>
         )}
+      </div>
+
+      <div className="card p-6">
+        <SectionTitle sub="Demo training programmes aligned to NSSTA / TPAC capacity-building priorities">
+          Recommended Training Programmes
+        </SectionTitle>
+        <div className="grid lg:grid-cols-3 gap-4">
+          {TRAINING_PROGRAMMES.map((programme) => (
+            <div key={programme.name} className="border border-slate-200 rounded-md p-4 bg-slate-50/60">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-slate-800">{programme.name}</p>
+                <span className={`badge ${programme.priority === 'high' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
+                  {programme.priority.toUpperCase()}
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 mt-2">Target role: {programme.targetRole}</p>
+              <p className="text-xs text-slate-500 mt-1">Duration: {programme.duration}</p>
+              <p className="text-xs text-slate-500 mt-1">Source: {programme.source}</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {programme.competencies.map((competency) => (
+                  <span key={`${programme.name}-${competency}`} className="badge bg-emerald-50 text-emerald-700 border border-emerald-200">{competency}</span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 justify-end">

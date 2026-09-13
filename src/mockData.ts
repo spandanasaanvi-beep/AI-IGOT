@@ -481,3 +481,49 @@ export const IGOT_REFERENCE_URL = 'https://share.google/IWs6nn9aU81vNehjp';
 
 export const CONTACT_EMAIL = 'infoPragati@gmail.com';
 export const CONTACT_PHONE = '+91 8073986510';
+
+export const TRAINING_PROGRAMMES = [
+  {
+    name: 'NSSTA Foundation Programme in Official Statistics',
+    competencies: ['Statistical Methods', 'Data Management', 'Quality Assurance'],
+    targetRole: 'Junior Statistical Officer / Statistical Investigator',
+    duration: '6 weeks',
+    priority: 'high',
+    source: 'NSSTA / TPAC',
+  },
+  {
+    name: 'TPAC Applied Data Analytics for Statistical Offices',
+    competencies: ['Statistical Analysis', 'Data Visualization', 'Python'],
+    targetRole: 'Statistical Officer / Assistant Director (Statistics)',
+    duration: '4 weeks',
+    priority: 'high',
+    source: 'NSSTA / TPAC',
+  },
+  {
+    name: 'Advanced Survey Design & Sampling Practice',
+    competencies: ['Statistical Methods', 'Survey Design', 'Data Interpretation'],
+    targetRole: 'Statistical Officer',
+    duration: '5 weeks',
+    priority: 'medium',
+    source: 'NSSTA / TPAC',
+  },
+];
+
+export const COMPETENCY_FRAMEWORK = [
+  {
+    category: 'Statistical Competencies',
+    skills: ['Survey Design', 'Sampling', 'National Accounts', 'Price Statistics', 'Labour Statistics', 'Agricultural Statistics', 'Industrial Statistics', 'SDG Indicators', 'Metadata Standards', 'Data Quality Frameworks'],
+  },
+  {
+    category: 'Technical Competencies',
+    skills: ['Python', 'R', 'SQL', 'Stata', 'SPSS', 'SAS', 'GIS', 'Data Visualization', 'AI/ML', 'Cloud Computing', 'APIs', 'Open Data'],
+  },
+  {
+    category: 'Digital Governance',
+    skills: ['Cybersecurity', 'Data Privacy', 'Digital Signatures', 'Government Cloud', 'Digital Public Infrastructure'],
+  },
+  {
+    category: 'Behavioural & Managerial',
+    skills: ['Leadership', 'Communication', 'Project Management', 'Ethics', 'Decision Making', 'Change Management'],
+  },
+];

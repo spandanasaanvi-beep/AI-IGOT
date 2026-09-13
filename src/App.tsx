@@ -22,6 +22,7 @@ import AdaptiveRecommendations from './pages/AdaptiveRecommendations';
 import RoleReady from './pages/RoleReady';
 import ReportsPage from './pages/ReportsPage';
 import CertificatePage from './pages/CertificatePage';
+import AdminDashboard from './pages/AdminDashboard';
 import AboutUs from './pages/AboutUs';
 import ContactPage from './pages/ContactPage';
 
@@ -71,6 +72,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/role-ready" element={<ProtectedRoute><Layout><RoleReady /></Layout></ProtectedRoute>} />
       <Route path="/reports" element={<ProtectedRoute><Layout><ReportsPage /></Layout></ProtectedRoute>} />
       <Route path="/certificate" element={<ProtectedRoute><Layout><CertificatePage /></Layout></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute><Layout><AdminDashboard /></Layout></ProtectedRoute>} />
       <Route path="/about" element={<ProtectedRoute><Layout><AboutUs /></Layout></ProtectedRoute>} />
       <Route path="/contact" element={<ProtectedRoute><Layout><ContactPage /></Layout></ProtectedRoute>} />
 

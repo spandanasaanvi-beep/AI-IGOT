@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Route, Globe, Upload, Sparkles, ClipboardCheck, GitCompareArrows,
-  Compass, FileBarChart, Award, Info, Mail, Menu, X, LogOut, Pencil,
+  Compass, FileBarChart, Award, Info, Mail, Menu, X, LogOut, Pencil, ShieldCheck,
 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import ProfileEditModal from './ProfileEditModal';
@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { to: '/adaptive', label: 'Adaptive Recommendations', icon: Compass },
   { to: '/reports', label: 'Report', icon: FileBarChart },
   { to: '/certificate', label: 'Certificate', icon: Award },
+  { to: '/admin', label: 'Admin Dashboard', icon: ShieldCheck },
   { to: '/about', label: 'About Us', icon: Info },
   { to: '/contact', label: 'Contact Team', icon: Mail },
 ];

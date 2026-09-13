@@ -16,8 +16,12 @@ const ProfileEditModal: React.FC<Props> = ({ onClose }) => {
     qualification: user.qualification,
     role: user.role,
     organization: user.organization,
+    currentAssignment: user.currentAssignment ?? '',
     experienceYears: user.experienceYears,
     experienceMonths: user.experienceMonths,
+    previousTraining: user.previousTraining ?? '',
+    technicalSkills: user.technicalSkills ?? '',
+    statisticalSkills: user.statisticalSkills ?? '',
   });
 
   const set = (k: keyof typeof form, v: string | number) => setForm((f) => ({ ...f, [k]: v }));
@@ -84,6 +88,10 @@ const ProfileEditModal: React.FC<Props> = ({ onClose }) => {
             </select>
           </div>
           <div>
+            <label className="label">Current Assignment</label>
+            <input className="input" value={form.currentAssignment} onChange={(e) => set('currentAssignment', e.target.value)} />
+          </div>
+          <div>
             <label className="label">Experience — Years</label>
             <input type="number" min={0} max={40} className="input" value={form.experienceYears}
               onChange={(e) => set('experienceYears', parseInt(e.target.value, 10) || 0)} />
@@ -92,6 +100,18 @@ const ProfileEditModal: React.FC<Props> = ({ onClose }) => {
             <label className="label">Experience — Months</label>
             <input type="number" min={0} max={11} className="input" value={form.experienceMonths}
               onChange={(e) => set('experienceMonths', parseInt(e.target.value, 10) || 0)} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label">Previous Training / Capacity Building</label>
+            <textarea className="input min-h-24" value={form.previousTraining} onChange={(e) => set('previousTraining', e.target.value)} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label">Existing Technical Skills</label>
+            <textarea className="input min-h-24" value={form.technicalSkills} onChange={(e) => set('technicalSkills', e.target.value)} />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label">Existing Statistical Skills</label>
+            <textarea className="input min-h-24" value={form.statisticalSkills} onChange={(e) => set('statisticalSkills', e.target.value)} />
           </div>
           <div className="sm:col-span-2 flex justify-end gap-3 pt-2">
             <button type="button" className="btn-secondary" onClick={onClose}>Cancel</button>

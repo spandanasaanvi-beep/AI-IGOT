@@ -8,6 +8,7 @@ import { useAppContext } from '../context/AppContext';
 import { generateInsight } from '../services/competencyEngine';
 import { EmptyState, SectionTitle } from '../components/EmptyState';
 import { ClipboardList } from 'lucide-react';
+import { COMPETENCY_FRAMEWORK } from '../mockData';
 
 const CompetencyGaps: React.FC = () => {
   const navigate = useNavigate();
@@ -61,6 +62,22 @@ const CompetencyGaps: React.FC = () => {
               <Bar dataKey="required" name="Required" fill="#cbd5e1" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+        </div>
+      </div>
+
+      <div className="card p-6">
+        <SectionTitle sub="Professional competency model aligned to India’s Official Statistical System">Competency Framework</SectionTitle>
+        <div className="grid lg:grid-cols-2 gap-4">
+          {COMPETENCY_FRAMEWORK.map((group) => (
+            <div key={group.category} className="border border-slate-200 rounded-md p-4 bg-slate-50/60">
+              <p className="text-sm font-bold text-slate-800">{group.category}</p>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {group.skills.map((skill) => (
+                  <span key={skill} className="badge bg-primary-50 text-primary-800 border border-primary-100">{skill}</span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

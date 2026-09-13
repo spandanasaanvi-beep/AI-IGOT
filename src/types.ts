@@ -23,8 +23,12 @@ export interface UserProfile {
   qualification: string;
   role: string;
   organization: string;
+  currentAssignment?: string;
   experienceYears: number;
   experienceMonths: number;
+  previousTraining?: string;
+  technicalSkills?: string;
+  statisticalSkills?: string;
   createdAt: string;
   profileCompleted: boolean;
 }
@@ -92,6 +96,9 @@ export interface LearningResource {
   igotUrl: string;
   provider: string;
   module?: string; // e.g. "Module 2" for adaptive re-recommendation
+  category?: string;
+  relevanceScore?: number;
+  enrolmentStatus?: string;
 }
 
 export interface Certificate {

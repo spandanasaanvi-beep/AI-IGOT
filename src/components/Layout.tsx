@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import { useAppContext } from '../context/AppContext';
 import { BadgeCheck } from 'lucide-react';
+import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, t } from '../services/localization';
 
 const TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
@@ -15,6 +16,7 @@ const TITLES: Record<string, string> = {
   '/adaptive': 'Adaptive Recommendations',
   '/reports': 'Report',
   '/certificate': 'Certificate',
+  '/admin': 'Admin Dashboard',
   '/about': 'About Us',
   '/contact': 'Contact Team',
 };
@@ -22,10 +24,15 @@ const TITLES: Record<string, string> = {
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const { state, roleReadiness } = useAppContext();
+  const [language, setLanguage] = useState<string>(() => localStorage.getItem('pragatiai-language') || DEFAULT_LANGUAGE);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  useEffect(() => {
+    localStorage.setItem('pragatiai-language', language);
+  }, [language]);
 
   const title = TITLES[location.pathname] ?? 'PragatiAI';
 
@@ -44,6 +51,19 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               </p>
             </div>
             <div className="hidden sm:flex items-center gap-3 shrink-0">
+              <label className="flex items-center gap-2 text-[11px] text-slate-600 bg-slate-100 rounded-full border border-slate-200 px-2.5 py-1.5">
+                <span>{t('language', language)}</span>
+                <select
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="bg-transparent text-slate-700 font-medium outline-none"
+                  aria-label="Select language"
+                >
+                  {Object.entries(SUPPORTED_LANGUAGES).map(([code, label]) => (
+                    <option key={code} value={code}>{label}</option>
+                  ))}
+                </select>
+              </label>
               <span className="badge bg-primary-50 text-primary-800 border border-primary-100">
                 <BadgeCheck size={13} /> {state.user?.role || 'Officer'}
               </span>
