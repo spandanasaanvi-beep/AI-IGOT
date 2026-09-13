@@ -186,6 +186,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       age: 0,
       qualification: '',
       role: '',
+      accountType: 'Learner',
       organization: '',
       experienceYears: 0,
       experienceMonths: 0,

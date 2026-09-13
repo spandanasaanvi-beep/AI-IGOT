@@ -490,6 +490,7 @@ export const TRAINING_PROGRAMMES = [
     duration: '6 weeks',
     priority: 'high',
     source: 'NSSTA / TPAC',
+    recommendationReason: 'Recommended to close foundational gaps in statistical methods, data management, and quality assurance for a strong start in official statistics work.',
   },
   {
     name: 'TPAC Applied Data Analytics for Statistical Offices',
@@ -498,6 +499,7 @@ export const TRAINING_PROGRAMMES = [
     duration: '4 weeks',
     priority: 'high',
     source: 'NSSTA / TPAC',
+    recommendationReason: 'Recommended when analytical gaps are visible in statistical analysis, data visualization, or Python-based reporting workflows.',
   },
   {
     name: 'Advanced Survey Design & Sampling Practice',
@@ -506,6 +508,7 @@ export const TRAINING_PROGRAMMES = [
     duration: '5 weeks',
     priority: 'medium',
     source: 'NSSTA / TPAC',
+    recommendationReason: 'Recommended to strengthen survey design, sampling choices, and interpretation skills for more reliable field and administrative reporting.',
   },
 ];
 

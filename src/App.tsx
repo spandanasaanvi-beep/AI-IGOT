@@ -48,6 +48,15 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+const RoleProtectedRoute: React.FC<{ children: React.ReactNode; requiredAccountType: 'Learner' | 'Administrator' }> = ({ children, requiredAccountType }) => {
+  const { state } = useAppContext();
+  if (!state.isAuthenticated) return <Navigate to="/" replace />;
+  if (state.user?.accountType !== requiredAccountType) {
+    return <Navigate to={state.user?.accountType === 'Administrator' ? '/admin' : '/dashboard'} replace />;
+  }
+  return <>{children}</>;
+};
+
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
@@ -72,7 +81,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/role-ready" element={<ProtectedRoute><Layout><RoleReady /></Layout></ProtectedRoute>} />
       <Route path="/reports" element={<ProtectedRoute><Layout><ReportsPage /></Layout></ProtectedRoute>} />
       <Route path="/certificate" element={<ProtectedRoute><Layout><CertificatePage /></Layout></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute><Layout><AdminDashboard /></Layout></ProtectedRoute>} />
+      <Route path="/admin" element={<RoleProtectedRoute requiredAccountType="Administrator"><Layout><AdminDashboard /></Layout></RoleProtectedRoute>} />
       <Route path="/about" element={<ProtectedRoute><Layout><AboutUs /></Layout></ProtectedRoute>} />
       <Route path="/contact" element={<ProtectedRoute><Layout><ContactPage /></Layout></ProtectedRoute>} />
 

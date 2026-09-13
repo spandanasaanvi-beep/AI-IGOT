@@ -17,6 +17,53 @@ const PRIORITY_ORDER: Record<Priority, number> = { high: 0, medium: 1, low: 2 };
  * Priority is derived from gap size (larger gap → higher priority);
  * module numbering supports the adaptive "next module" loop.
  */
+export function getCourseCatalogue(): LearningResource[] {
+  return LEARNING_CATALOGUE.map((resource) => ({
+    ...resource,
+    status: 'recommended',
+    progress: 0,
+    category: resource.category ?? 'General',
+    relevanceScore: resource.relevanceScore ?? 80,
+    enrolmentStatus: 'not-enrolled',
+  }));
+}
+
+export function getCourseRecommendations(
+  competencies: Competency[],
+  existing: LearningResource[] = []
+): LearningResource[] {
+  return getRecommendedResources(competencies, existing);
+}
+
+export function getEnrolmentStatus(
+  resourceId: string,
+  existing: LearningResource[] = []
+): LearningResource['enrolmentStatus'] {
+  const match = existing.find((resource) => resource.id === resourceId);
+  return match?.enrolmentStatus ?? 'not-enrolled';
+}
+
+export function getCompletionStatus(
+  resourceId: string,
+  existing: LearningResource[] = []
+): LearningResource['status'] {
+  const match = existing.find((resource) => resource.id === resourceId);
+  return match?.status ?? 'recommended';
+}
+
+export function updateCompetencySignals(competencies: Competency[]) {
+  return competencies
+    .filter((competency) => competency.currentScore < competency.requiredScore)
+    .map((competency) => ({
+      competency: competency.name,
+      gap: competency.gap,
+      priority: competency.gap >= 25 ? 'high' : competency.gap >= 12 ? 'medium' : 'low',
+      requiredScore: competency.requiredScore,
+      currentScore: competency.currentScore,
+    }))
+    .sort((a, b) => b.gap - a.gap);
+}
+
 export function getRecommendedResources(
   competencies: Competency[],
   existing: LearningResource[] = []

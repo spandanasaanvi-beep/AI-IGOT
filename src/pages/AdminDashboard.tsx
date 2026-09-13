@@ -131,15 +131,16 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         <div className="card p-6">
-          <SectionTitle sub="Prototype workforce insight / AI-powered prediction">Emerging Skill Requirements</SectionTitle>
+          <SectionTitle sub="Prototype AI-driven workforce insight — not an official government forecast.">Emerging Skill Requirements</SectionTitle>
           <div className="space-y-3">
             {[
-              'AI/ML for official statistics',
-              'Data Science & advanced analytics',
-              'GIS and geospatial decision support',
-              'Cloud computing for data services',
-              'Cybersecurity and data privacy',
-              'APIs and open data integrations',
+              'AI/ML',
+              'Data Science',
+              'GIS',
+              'Cloud Computing',
+              'Cybersecurity',
+              'Big Data Analytics',
+              'Data Visualization',
             ].map((skill) => (
               <div key={skill} className="flex items-center justify-between border border-slate-200 rounded-md p-3">
                 <span className="text-sm font-medium text-slate-700">{skill}</span>

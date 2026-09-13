@@ -17,6 +17,7 @@ const ProfileSetup: React.FC = () => {
     age: 0,
     qualification: '',
     role: '',
+    accountType: user?.accountType ?? 'Learner',
     organization: '',
     currentAssignment: '',
     experienceYears: 0,
@@ -102,6 +103,17 @@ const ProfileSetup: React.FC = () => {
                   <select className="input" value={form.role} onChange={(e) => set('role', e.target.value)} required>
                     <option value="">Select role</option>
                     {ROLES.map((r) => <option key={r}>{r}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="label">Access Type</label>
+                  <select
+                    className="input"
+                    value={form.accountType}
+                    onChange={(e) => set('accountType', e.target.value as 'Learner' | 'Administrator')}
+                  >
+                    <option value="Learner">Learner</option>
+                    <option value="Administrator">Administrator</option>
                   </select>
                 </div>
                 <div>

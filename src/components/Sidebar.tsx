@@ -7,18 +7,24 @@ import {
 import { useAppContext } from '../context/AppContext';
 import ProfileEditModal from './ProfileEditModal';
 
-const NAV_ITEMS = [
+const LEARNER_NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/competency-gaps', label: 'Competency & Skill Gaps', icon: ClipboardCheck },
   { to: '/learning-path', label: 'Personalized Learning Path', icon: Route },
   { to: '/igot', label: 'iGOT Karmayogi', icon: Globe },
   { to: '/upload', label: 'Upload Learning Material', icon: Upload },
   { to: '/quiz', label: 'AI Quiz / MCQ Generator', icon: Sparkles },
-  { to: '/quiz-result', label: 'Quiz Result', icon: ClipboardCheck },
   { to: '/before-after', label: 'Before vs After', icon: GitCompareArrows },
   { to: '/adaptive', label: 'Adaptive Recommendations', icon: Compass },
   { to: '/reports', label: 'Report', icon: FileBarChart },
   { to: '/certificate', label: 'Certificate', icon: Award },
+];
+
+const ADMIN_NAV_ITEMS = [
   { to: '/admin', label: 'Admin Dashboard', icon: ShieldCheck },
+];
+
+const EXTRA_NAV_ITEMS = [
   { to: '/about', label: 'About Us', icon: Info },
   { to: '/contact', label: 'Contact Team', icon: Mail },
 ];
@@ -29,6 +35,9 @@ const Sidebar: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const user = state.user;
+  const accountType = user?.accountType || 'Learner';
+  const visibleNavItems = accountType === 'Administrator' ? ADMIN_NAV_ITEMS : LEARNER_NAV_ITEMS;
+  const navItems = [...visibleNavItems, ...EXTRA_NAV_ITEMS];
 
   const isActive = (to: string) => location.pathname === to;
 
@@ -84,7 +93,7 @@ const Sidebar: React.FC = () => {
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto sidebar-scroll py-3">
         <ul className="px-3 space-y-0.5">
-          {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
+          {navItems.map(({ to, label, icon: Icon }) => (
             <li key={to}>
               <Link
                 to={to}

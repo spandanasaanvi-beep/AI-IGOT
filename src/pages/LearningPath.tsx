@@ -20,6 +20,11 @@ const LearningPath: React.FC = () => {
 
   const resources = state.resources;
   const learningStages = ['Foundation', 'Skill Development', 'Applied Learning', 'Assessment', 'Advanced Learning'];
+  const gapCompetencies = state.competencies.filter((c) => c.gap > 0).map((c) => c.name);
+  const relevantProgrammes = TRAINING_PROGRAMMES.filter((programme) =>
+    programme.competencies.some((competency) => gapCompetencies.includes(competency))
+  );
+  const programmesToShow = relevantProgrammes.length ? relevantProgrammes : TRAINING_PROGRAMMES;
 
   if (!state.competencies.length) {
     return (
@@ -127,28 +132,43 @@ const LearningPath: React.FC = () => {
       </div>
 
       <div className="card p-6">
-        <SectionTitle sub="Demo training programmes aligned to NSSTA / TPAC capacity-building priorities">
-          Recommended Training Programmes
+        <SectionTitle
+          sub={
+            gapCompetencies.length
+              ? `NSSTA / TPAC recommended training programmes aligned to your current skill gaps: ${gapCompetencies.slice(0, 3).join(', ')}.`
+              : 'Demo training programmes aligned to NSSTA / TPAC capacity-building priorities.'
+          }
+        >
+          NSSTA / TPAC Recommended Training Programmes
         </SectionTitle>
         <div className="grid lg:grid-cols-3 gap-4">
-          {TRAINING_PROGRAMMES.map((programme) => (
-            <div key={programme.name} className="border border-slate-200 rounded-md p-4 bg-slate-50/60">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-bold text-slate-800">{programme.name}</p>
-                <span className={`badge ${programme.priority === 'high' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
-                  {programme.priority.toUpperCase()}
-                </span>
+          {programmesToShow.map((programme) => {
+            const aligned = programme.competencies.filter((competency) => gapCompetencies.includes(competency));
+            return (
+              <div key={programme.name} className="border border-slate-200 rounded-md p-4 bg-slate-50/60">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-bold text-slate-800">{programme.name}</p>
+                  <span className={`badge ${programme.priority === 'high' ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
+                    {programme.priority.toUpperCase()}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Target role: {programme.targetRole}</p>
+                <p className="text-xs text-slate-500 mt-1">Duration: {programme.duration}</p>
+                <p className="text-xs text-slate-500 mt-1">Source: {programme.source}</p>
+                <p className="text-xs text-slate-600 mt-2">Recommendation reason: {programme.recommendationReason}</p>
+                {aligned.length > 0 && (
+                  <p className="text-[11px] text-primary-700 mt-2 font-medium">
+                    Current gap alignment: {aligned.join(', ')}
+                  </p>
+                )}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {programme.competencies.map((competency) => (
+                    <span key={`${programme.name}-${competency}`} className="badge bg-emerald-50 text-emerald-700 border border-emerald-200">{competency}</span>
+                  ))}
+                </div>
               </div>
-              <p className="text-xs text-slate-500 mt-2">Target role: {programme.targetRole}</p>
-              <p className="text-xs text-slate-500 mt-1">Duration: {programme.duration}</p>
-              <p className="text-xs text-slate-500 mt-1">Source: {programme.source}</p>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {programme.competencies.map((competency) => (
-                  <span key={`${programme.name}-${competency}`} className="badge bg-emerald-50 text-emerald-700 border border-emerald-200">{competency}</span>
-                ))}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

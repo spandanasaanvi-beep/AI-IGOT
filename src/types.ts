@@ -22,6 +22,7 @@ export interface UserProfile {
   age: number;
   qualification: string;
   role: string;
+  accountType?: 'Learner' | 'Administrator';
   organization: string;
   currentAssignment?: string;
   experienceYears: number;
