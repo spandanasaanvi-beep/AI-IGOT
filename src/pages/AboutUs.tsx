@@ -8,7 +8,7 @@ const APPROACH_STEPS = ['Assess', 'Identify', 'Learn', 'Test', 'Improve', 'Reass
 const TEAM_MEMBERS = [
   { name: 'Spandana M', role: 'Backend Developer' },
   { name: 'Anusha N', role: 'Team Lead' },
-  { name: 'Chandana R', role: 'PPT Designer' },
+  { name: 'Chandana R', role: 'Frontend Developer' },
   { name: 'Harshitha US', role: 'Frontend Executive' },
   { name: 'Stephen Solomon', role: 'Testing' },
   { name: 'Nanda Kishor K', role: 'Debugging' },
