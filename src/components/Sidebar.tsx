@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, Route, Globe, Upload, Sparkles, ClipboardCheck, GitCompareArrows,
-  Compass, FileBarChart, Award, Info, Mail, Menu, X, LogOut, Pencil, ShieldCheck,
+  LayoutDashboard, Route, Globe, Upload, Sparkles, ClipboardCheck,
+  FileBarChart, Award, Info, Mail, Menu, X, LogOut, Pencil, ShieldCheck,
 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import ProfileEditModal from './ProfileEditModal';
@@ -10,13 +10,11 @@ import ProfileEditModal from './ProfileEditModal';
 const LEARNER_NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/competency-gaps', label: 'Competency & Skill Gaps', icon: ClipboardCheck },
-  { to: '/learning-path', label: 'Personalized Learning Path', icon: Route },
+  { to: '/learning-path', label: 'Learning Path', icon: Route },
   { to: '/igot', label: 'iGOT Karmayogi', icon: Globe },
   { to: '/upload', label: 'Upload Learning Material', icon: Upload },
-  { to: '/quiz', label: 'AI Quiz / MCQ Generator', icon: Sparkles },
-  { to: '/before-after', label: 'Before vs After', icon: GitCompareArrows },
-  { to: '/adaptive', label: 'Adaptive Recommendations', icon: Compass },
-  { to: '/reports', label: 'Report', icon: FileBarChart },
+  { to: '/quiz', label: 'Quiz / MCQs', icon: Sparkles },
+  { to: '/reports', label: 'Reports', icon: FileBarChart },
   { to: '/certificate', label: 'Certificate', icon: Award },
 ];
 

@@ -7,14 +7,13 @@ import { DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES, t } from '../services/localizati
 
 const TITLES: Record<string, string> = {
   '/dashboard': 'Dashboard',
-  '/learning-path': 'Personalized Learning Path',
+  '/competency-gaps': 'Competency & Skill Gaps',
+  '/learning-path': 'Learning Path',
   '/igot': 'iGOT Karmayogi',
   '/upload': 'Upload Learning Material',
-  '/quiz': 'AI Quiz / MCQ Generator',
+  '/quiz': 'Quiz / MCQs',
   '/quiz-result': 'Quiz Result',
-  '/before-after': 'Before vs After',
-  '/adaptive': 'Adaptive Recommendations',
-  '/reports': 'Report',
+  '/reports': 'Reports',
   '/certificate': 'Certificate',
   '/admin': 'Admin Dashboard',
   '/about': 'About Us',
